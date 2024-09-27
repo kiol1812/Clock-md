@@ -1,165 +1,81 @@
-.page {
-  --gray-rgb: 0, 0, 0;
-  --gray-alpha-200: rgba(var(--gray-rgb), 0.08);
-  --gray-alpha-100: rgba(var(--gray-rgb), 0.05);
-
-  --button-primary-hover: #383838;
-  --button-secondary-hover: #f2f2f2;
-
-  display: grid;
-  grid-template-rows: 20px 1fr 20px;
-  align-items: center;
-  justify-items: center;
-  min-height: 100svh;
-  padding: 80px;
-  gap: 64px;
-  font-family: var(--font-geist-sans);
+.clock_container {
+  display: flex;
+  align-items: stretch; /* Ensure both clock and calendar stretch vertically */
+  color: white;
+  text-align: center;
 }
 
-@media (prefers-color-scheme: dark) {
-  .page {
-    --gray-rgb: 255, 255, 255;
-    --gray-alpha-200: rgba(var(--gray-rgb), 0.145);
-    --gray-alpha-100: rgba(var(--gray-rgb), 0.06);
-
-    --button-primary-hover: #ccc;
-    --button-secondary-hover: #1a1a1a;
-  }
+.clock {
+  font-size: 8rem;
+  font-weight: 500;
+  letter-spacing: 3px;
+  display: flex;
+  align-items: center; /* Vertically center the clock */
 }
 
-.main {
+.calendar_container {
   display: flex;
   flex-direction: column;
-  gap: 32px;
-  grid-row-start: 2;
-}
-
-.main ol {
-  font-family: var(--font-geist-mono);
-  padding-left: 0;
-  margin: 0;
-  font-size: 14px;
-  line-height: 24px;
-  letter-spacing: -0.01em;
-  list-style-position: inside;
-}
-
-.main li:not(:last-of-type) {
-  margin-bottom: 8px;
-}
-
-.main code {
-  font-family: inherit;
-  background: var(--gray-alpha-100);
-  padding: 2px 4px;
-  border-radius: 4px;
-  font-weight: 600;
-}
-
-.ctas {
-  display: flex;
-  gap: 16px;
-}
-
-.ctas a {
-  appearance: none;
-  border-radius: 128px;
-  height: 48px;
-  padding: 0 20px;
-  border: none;
-  border: 1px solid transparent;
-  transition: background 0.2s, color 0.2s, border-color 0.2s;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
+  margin-left: 40px;
+  align-items: flex-start; /* Align items to the left */
   justify-content: center;
-  font-size: 16px;
-  line-height: 20px;
-  font-weight: 500;
+  min-height: 100%; /* Ensure the calendar takes the same height as the clock */
 }
 
-a.primary {
-  background: var(--foreground);
-  color: var(--background);
-  gap: 8px;
+.month_name {
+  font-size: 1.5rem;
+  color: #ff3b30;
+  margin-bottom: 5px; /* Space below the month */
+  align-self: flex-start; /* Align the month name to the left */
+  text-transform: uppercase; /* Make the month name uppercase */
+  margin-left: 8px; /* Move the month name slightly to the right */
 }
 
-a.secondary {
-  border-color: var(--gray-alpha-200);
-  min-width: 180px;
+.calendar_grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 5px; /* Reduced gap between the days */
+  width: 100%;
+  max-width: 200px; /* Shrunk the overall width */
+  color: white;
 }
 
-.footer {
-  grid-row-start: 3;
+.calendar_grid_span {
   display: flex;
-  gap: 24px;
-}
-
-.footer a {
-  display: flex;
+  justify-content: center;
   align-items: center;
-  gap: 8px;
+  font-size: 1rem; /* Reduced font size for day numbers */
+  padding: 5px; /* Reduced padding inside day cells */
+  border-radius: 50%;
 }
 
-.footer img {
-  flex-shrink: 0;
+.weekday_header {
+  opacity: 0.8;
+  font-size: 0.9rem; /* Reduced font size for weekday headers */
 }
 
-/* Enable hover only on non-touch devices */
-@media (hover: hover) and (pointer: fine) {
-  a.primary:hover {
-    background: var(--button-primary-hover);
-    border-color: transparent;
-  }
-
-  a.secondary:hover {
-    background: var(--button-secondary-hover);
-    border-color: transparent;
-  }
-
-  .footer a:hover {
-    text-decoration: underline;
-    text-underline-offset: 4px;
-  }
+.today {
+  background-color: #ff3b30;
+  color: white;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 1rem; /* Reduced font size for day numbers */
+  padding: 5px; /* Reduced padding inside day cells */
+  border-radius: 50%;
 }
 
-@media (max-width: 600px) {
-  .page {
-    padding: 32px;
-    padding-bottom: 80px;
+/* Responsive styling */
+@media (max-width: 768px) {
+  .clock {
+      font-size: 5rem;
   }
 
-  .main {
-    align-items: center;
+  .month_name {
+      font-size: 1.3rem;
   }
 
-  .main ol {
-    text-align: center;
-  }
-
-  .ctas {
-    flex-direction: column;
-  }
-
-  .ctas a {
-    font-size: 14px;
-    height: 40px;
-    padding: 0 16px;
-  }
-
-  a.secondary {
-    min-width: auto;
-  }
-
-  .footer {
-    flex-wrap: wrap;
-    align-items: center;
-    justify-content: center;
-  }
-}
-
-@media (prefers-color-scheme: dark) {
-  .logo {
-    filter: invert();
+  .calendar_grid span {
+      font-size: 0.8rem;
   }
 }

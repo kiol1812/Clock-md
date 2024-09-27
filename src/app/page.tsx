@@ -1,95 +1,81 @@
-import Image from "next/image";
+'use client'
+import React, { useEffect, useRef, useState } from "react";
 import styles from "./page.module.css";
 
-export default function Home() {
-  return (
-    <div className={styles.page}>
-      <main className={styles.main}>
-        <Image
-          className={styles.logo}
-          src="https://nextjs.org/icons/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol>
-          <li>
-            Get started by editing <code>src/app/page.tsx</code>.
-          </li>
-          <li>Save and see your changes instantly.</li>
-        </ol>
+function updateCalendar(date:Date) {
+  const dayNames_char = ["S", "M", "T", "W", "T", "F", "S"];
+  const month = date.getMonth();
+  const year = date.getFullYear();
+  const firstDayOfMonth = new Date(year, month, 1).getDay();
+  const daysInMonth = new Date(year, month + 1, 0).getDate();
+  
+  var calendarGrid:React.ReactNode[]=[];
+  dayNames_char.forEach((obj)=>{
+    calendarGrid.push(<div className={styles.calendar_grid_span} id={`${obj}`}>{obj}</div>);
+  });
+  
+  for (let i = 0; i < firstDayOfMonth; i++) {
+    calendarGrid.push(<div className={styles.calendar_grid_span} id={`${i}`}></div>);
+  }
+  for (let day=1; day <= daysInMonth; day++) {
+    calendarGrid.push(day==date.getDate()?<div className={styles.today} id={`${day}`}>{day}</div>:<div className={styles.calendar_grid_span} id={`${day}`}>{day}</div>);
+  }
+  return calendarGrid;
+}
 
-        <div className={styles.ctas}>
-          <a
-            className={styles.primary}
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className={styles.logo}
-              src="https://nextjs.org/icons/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-            className={styles.secondary}
-          >
-            Read our docs
-          </a>
+export default function Home() {
+  function toggleFullscreen() {
+    if (!document.fullscreenElement) {
+        document.documentElement.requestFullscreen().catch((err) => {
+            console.error(
+                `Error attempting to enable full-screen mode: ${err.message} (${err.name})`
+            );
+        });
+    } else {
+        document.exitFullscreen();
+    }
+  }
+  const monthNames = ["January","February","March","April","May","June","July","August","September","October","November","December"];
+  const timerRef = useRef<NodeJS.Timeout|null>(null);
+  const [now_time, setTime] = useState<Date|null>(null);
+  const [monthName, setMonthName] = useState<String>("");
+  const [minute, setMinute] = useState<String>("");
+  const [hour, setHour] = useState<String>("");
+  const [calender, setCalender] = useState<React.ReactNode[]|null>(null);
+  useEffect(()=>{
+    timerRef.current = setInterval(()=>{
+      const now = new Date();
+      const month = now.getMonth();
+      const hours = now.getHours();
+      const minutes = now.getMinutes();
+      const s_hour = hours < 10 ? "0" + hours : ""+hours;
+      const s_minute = minutes < 10 ? "0" + minutes : ""+minutes;
+      if(monthNames[month]!=monthName) setMonthName(monthNames[month]);
+      if(hour!=s_hour) setHour(s_hour);
+      if(minute!=s_minute) setMinute(s_minute);
+      setTime(now);
+    }, 1000); //1s
+    return ()=>{
+      if(timerRef.current) clearInterval(timerRef.current);
+    }
+  }, []);
+  useEffect(()=>{
+    console.log("update year and month");
+    setCalender(updateCalendar(now_time||new Date()));
+  }, [monthName])
+  return (
+    <div>
+      <main>
+        <div className={styles.clock_container}>
+            <div id="time" className={styles.clock} onClick={toggleFullscreen}>{`${hour}:${minute}`}</div>
+            <div className={styles.calendar_container}>
+                <div id="month_name" className={styles.month_name}>{monthName}</div>
+                <div className={styles.calendar_grid} id="calendar_grid">{calender}</div>
+            </div>
         </div>
       </main>
-      <footer className={styles.footer}>
-        <a
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="https://nextjs.org/icons/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="https://nextjs.org/icons/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="https://nextjs.org/icons/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
-      </footer>
+      {/* <footer>
+      </footer> */}
     </div>
   );
 }
