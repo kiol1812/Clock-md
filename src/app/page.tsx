@@ -9,7 +9,7 @@ function updateCalendar(date:Date) {
   const firstDayOfMonth = new Date(year, month, 1).getDay();
   const daysInMonth = new Date(year, month + 1, 0).getDate();
   
-  var calendarGrid:React.ReactNode[]=[];
+  let calendarGrid:React.ReactNode[]=[];
   dayNames_char.forEach((obj)=>{
     calendarGrid.push(<div className={styles.calendar_grid_span} id={`${obj}`}>{obj}</div>);
   });
@@ -35,14 +35,14 @@ export default function Home() {
         document.exitFullscreen();
     }
   }
-  const monthNames = ["January","February","March","April","May","June","July","August","September","October","November","December"];
   const timerRef = useRef<NodeJS.Timeout|null>(null);
   const [now_time, setTime] = useState<Date|null>(null);
-  const [monthName, setMonthName] = useState<String>("");
-  const [minute, setMinute] = useState<String>("");
-  const [hour, setHour] = useState<String>("");
+  const [monthName, setMonthName] = useState<string>("");
+  const [minute, setMinute] = useState<string>("");
+  const [hour, setHour] = useState<string>("");
   const [calender, setCalender] = useState<React.ReactNode[]|null>(null);
   useEffect(()=>{
+    const monthNames = ["January","February","March","April","May","June","July","August","September","October","November","December"];
     timerRef.current = setInterval(()=>{
       const now = new Date();
       const month = now.getMonth();
@@ -58,10 +58,10 @@ export default function Home() {
     return ()=>{
       if(timerRef.current) clearInterval(timerRef.current);
     }
-  }, []);
+  }, [hour, minute, monthName]);
   useEffect(()=>{
     console.log("update year and month");
-    setCalender(updateCalendar(now_time||new Date()));
+    setCalender(updateCalendar(new Date()));
   }, [monthName])
   return (
     <div>
