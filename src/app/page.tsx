@@ -9,7 +9,7 @@ function updateCalendar(date:Date) {
   const firstDayOfMonth = new Date(year, month, 1).getDay();
   const daysInMonth = new Date(year, month + 1, 0).getDate();
   
-  let calendarGrid:React.ReactNode[]=[];
+  const calendarGrid:React.ReactNode[]=[];
   dayNames_char.forEach((obj)=>{
     calendarGrid.push(<div className={styles.calendar_grid_span} id={`${obj}`}>{obj}</div>);
   });
@@ -36,7 +36,7 @@ export default function Home() {
     }
   }
   const timerRef = useRef<NodeJS.Timeout|null>(null);
-  const [now_time, setTime] = useState<Date|null>(null);
+  // const [now_time, setTime] = useState<Date|null>(null);
   const [monthName, setMonthName] = useState<string>("");
   const [minute, setMinute] = useState<string>("");
   const [hour, setHour] = useState<string>("");
@@ -53,7 +53,7 @@ export default function Home() {
       if(monthNames[month]!=monthName) setMonthName(monthNames[month]);
       if(hour!=s_hour) setHour(s_hour);
       if(minute!=s_minute) setMinute(s_minute);
-      setTime(now);
+      // setTime(now);
     }, 1000); //1s
     return ()=>{
       if(timerRef.current) clearInterval(timerRef.current);
