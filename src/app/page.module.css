@@ -65,6 +65,39 @@
   border-radius: 50%;
 }
 
+.workspace{
+  display: flex;
+  flex-direction: row;
+}
+
+.workspace textarea{
+  width: 100%;
+  height: 100%;
+  /* border-radius: 10px; */
+  background-color: #00000000;
+  border: #00000000 solid;
+  color: aliceblue;
+  outline: none;
+}
+.workspace p{
+  width: 100%;
+  height: 100%;
+  border-radius: 10px;
+  background-color: #00000000;
+  border: #00000000 solid;
+  color: aliceblue;
+}
+.workspace h4{
+  color: #aaaaaa77;
+}
+.doc{
+  height: auto;
+  color: aliceblue;
+}
+.doc ul{
+  padding-left: 30px;
+}
+
 /* Responsive styling */
 @media (max-width: 768px) {
   .clock {
@@ -75,7 +108,7 @@
       font-size: 1.3rem;
   }
 
-  .calendar_grid span {
+  .calendar_grid_span {
       font-size: 0.8rem;
   }
 }

@@ -1,6 +1,15 @@
 'use client'
 import React, { useEffect, useRef, useState } from "react";
 import styles from "./page.module.css";
+import { Editor } from "@/components/md_editor";
+import { Viewer } from "@/components/md_viewer";
+
+import { useHotkeys } from "@mantine/hooks";
+import matter from "gray-matter";
+import remarkGfm from "remark-gfm";
+import rehypeRaw from "rehype-raw";
+import ReactMarkdowm from 'react-markdown';
+import Script from "next/script";
 
 function updateCalendar(date:Date) {
   const dayNames_char = ["S", "M", "T", "W", "T", "F", "S"];
@@ -8,22 +17,17 @@ function updateCalendar(date:Date) {
   const year = date.getFullYear();
   const firstDayOfMonth = new Date(year, month, 1).getDay();
   const daysInMonth = new Date(year, month + 1, 0).getDate();
-  
   const calendarGrid:React.ReactNode[]=[];
-  dayNames_char.forEach((obj)=>{
-    calendarGrid.push(<div className={styles.calendar_grid_span} id={`${obj}`}>{obj}</div>);
-  });
-  
-  for (let i = 0; i < firstDayOfMonth; i++) {
-    calendarGrid.push(<div className={styles.calendar_grid_span} id={`${i}`}></div>);
-  }
-  for (let day=1; day <= daysInMonth; day++) {
-    calendarGrid.push(day==date.getDate()?<div className={styles.today} id={`${day}`}>{day}</div>:<div className={styles.calendar_grid_span} id={`${day}`}>{day}</div>);
-  }
+  dayNames_char.forEach((obj)=>{ calendarGrid.push(<div className={styles.calendar_grid_span} id={`${obj}`}>{obj}</div>); });
+  for (let i = 0; i < firstDayOfMonth; i++) calendarGrid.push(<div className={styles.calendar_grid_span} id={`${i}`}></div>);
+  for (let day=1; day <= daysInMonth; day++) calendarGrid.push(day==date.getDate()?<div className={styles.today} id={`${day}`}>{day}</div>:<div className={styles.calendar_grid_span} id={`${day}`}>{day}</div>);
   return calendarGrid;
 }
 
 export default function Home() {
+  const [isFullScreen, setFullScreen] = useState<boolean>(false);
+  const [isediting, setEditing] = useState<boolean>(true);
+  const [worksapce, setWorksapce] = useState<boolean>(true);
   function toggleFullscreen() {
     if (!document.fullscreenElement) {
         document.documentElement.requestFullscreen().catch((err) => {
@@ -31,16 +35,19 @@ export default function Home() {
                 `Error attempting to enable full-screen mode: ${err.message} (${err.name})`
             );
         });
+        setFullScreen(true);
+        setEditing(false);
     } else {
         document.exitFullscreen();
+        setFullScreen(false);
     }
   }
   const timerRef = useRef<NodeJS.Timeout|null>(null);
-  // const [now_time, setTime] = useState<Date|null>(null);
   const [monthName, setMonthName] = useState<string>("");
   const [minute, setMinute] = useState<string>("");
   const [hour, setHour] = useState<string>("");
   const [calender, setCalender] = useState<React.ReactNode[]|null>(null);
+  const [text, setText] = useState<string>("");
   useEffect(()=>{
     const monthNames = ["January","February","March","April","May","June","July","August","September","October","November","December"];
     timerRef.current = setInterval(()=>{
@@ -53,7 +60,6 @@ export default function Home() {
       if(monthNames[month]!=monthName) setMonthName(monthNames[month]);
       if(hour!=s_hour) setHour(s_hour);
       if(minute!=s_minute) setMinute(s_minute);
-      // setTime(now);
     }, 1000); //1s
     return ()=>{
       if(timerRef.current) clearInterval(timerRef.current);
@@ -62,20 +68,46 @@ export default function Home() {
   useEffect(()=>{
     console.log("update year and month");
     setCalender(updateCalendar(new Date()));
-  }, [monthName])
+  }, [monthName]);
+  useHotkeys([['/', ()=>setWorksapce(!worksapce)]]);
   return (
     <div>
       <main>
         <div className={styles.clock_container}>
+            <div id="offset" style={{width:`55px`}} />
             <div id="time" className={styles.clock} onClick={toggleFullscreen}>{`${hour}:${minute}`}</div>
             <div className={styles.calendar_container}>
                 <div id="month_name" className={styles.month_name}>{monthName}</div>
                 <div className={styles.calendar_grid} id="calendar_grid">{calender}</div>
             </div>
         </div>
+        {worksapce?
+        <div className={styles.workspace}>
+          {isediting?<Editor>
+            <textarea placeholder="type something or choose a template." value={text} onChange={e=>setText(e.target.value)} />
+          </Editor>:<></>}
+          <div onClick={()=>{setEditing(!isediting)}}>
+            <Viewer w={isediting?384:768} >
+              <h4>{(!isFullScreen)?(isediting)?"Click to close editor.":"Click to editing.":""}</h4>
+              <div>
+                <ReactMarkdowm children={matter(text).content||text} className={styles.doc} remarkPlugins={[remarkGfm]} rehypePlugins={[rehypeRaw]} />
+                <Script
+                    type='module'
+                    strategy='afterInteractive'
+                    dangerouslySetInnerHTML={{
+                      __html: `
+                      import mermaid from "https://cdn.jsdelivr.net/npm/mermaid@9/dist/mermaid.esm.min.mjs";
+                      mermaid.initialize({startOnLoad: true});
+                      mermaid.contentLoaded();
+                      `
+                    }}
+                />
+              </div>
+            </Viewer>
+          </div>
+        </div>
+        :<></>}
       </main>
-      {/* <footer>
-      </footer> */}
     </div>
   );
 }
