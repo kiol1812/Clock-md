@@ -11,6 +11,9 @@ import rehypeRaw from "rehype-raw";
 import ReactMarkdowm from 'react-markdown';
 import Script from "next/script";
 
+import remarkMath from "remark-math";
+import rehypeKatex from "rehype-katex";
+
 function updateCalendar(date:Date) {
   const dayNames_char = ["S", "M", "T", "W", "T", "F", "S"];
   const month = date.getMonth();
@@ -90,8 +93,16 @@ export default function Home() {
             <Viewer w={isediting?384:768} >
               <h4>{(!isFullScreen)?(isediting)?"Click to close editor.":"Click to editing.":""}</h4>
               <div>
-                <ReactMarkdowm children={matter(text).content||text} className={styles.doc} remarkPlugins={[remarkGfm]} rehypePlugins={[rehypeRaw]} />
+                <ReactMarkdowm
+                  className={styles.doc}
+                  remarkPlugins={[remarkGfm, remarkMath]} 
+                  rehypePlugins={[rehypeRaw, rehypeKatex]}
+                  disallowedElements={["katex-html"]}
+                >
+                  {matter(text).content||text}
+                </ReactMarkdowm>
                 <Script
+                    id="load mermaid"
                     type='module'
                     strategy='afterInteractive'
                     dangerouslySetInnerHTML={{

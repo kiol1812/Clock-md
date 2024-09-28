@@ -5,7 +5,7 @@ export function Viewer({
     w
 }:{
     children: React.ReactNode,
-    w:Number
+    w:number
 }){
     return (
         <div className={styles.container} style={{width:`${w}px`}}>{children}</div>
