@@ -107,7 +107,7 @@ export default function Home() {
                   rehypePlugins={[rehypeRaw, rehypeKatex]}
                   disallowedElements={["katex-html"]}
                   components={{
-                    code({ node, className, children, ...props }) {
+                    code({ className, children, ...props }) {
                       const match = /language-(\w+)/.exec(className || "");
                       return match ? (
                         <SyntaxHighlighter
