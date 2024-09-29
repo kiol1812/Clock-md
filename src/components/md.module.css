@@ -2,9 +2,9 @@
     max-width: 768px;
     min-width: 384px;
     border-radius: 10px;
-    background-color: #333;
-    height: 400px;
-    max-height: 600px;
+    background-color: #222;
+    height: auto;
+    min-height: 400px;
     display: flex;
     flex-direction: column;
     padding: 10px;

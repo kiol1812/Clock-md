@@ -14,6 +14,11 @@ import Script from "next/script";
 import remarkMath from "remark-math";
 import rehypeKatex from "rehype-katex";
 
+import SyntaxHighlighter from "react-syntax-highlighter";
+import { a11yDark } from "react-syntax-highlighter/dist/esm/styles/prism";
+import hljs from "highlight.js";
+import "highlight.js/styles/agate.css"
+
 function updateCalendar(date:Date) {
   const dayNames_char = ["S", "M", "T", "W", "T", "F", "S"];
   const month = date.getMonth();
@@ -72,6 +77,9 @@ export default function Home() {
     console.log("update year and month");
     setCalender(updateCalendar(new Date()));
   }, [monthName]);
+  useEffect(()=>{
+    hljs.highlightAll();
+  }, [text]);
   useHotkeys([['/', ()=>setWorksapce(!worksapce)]]);
   return (
     <div>
@@ -98,6 +106,25 @@ export default function Home() {
                   remarkPlugins={[remarkGfm, remarkMath]} 
                   rehypePlugins={[rehypeRaw, rehypeKatex]}
                   disallowedElements={["katex-html"]}
+                  components={{
+                    code({ node, className, children, ...props }) {
+                      const match = /language-(\w+)/.exec(className || "");
+                      return match ? (
+                        <SyntaxHighlighter
+                          style={a11yDark}
+                          PreTag="div"
+                          language={match[1]}
+                          // {...props}
+                        >
+                          {String(children).replace(/\n$/, "")}
+                        </SyntaxHighlighter>
+                      ) : (
+                        <code className={className ? className : ""} {...props}>
+                          {children}
+                        </code>
+                      );
+                    }
+                  }}
                 >
                   {matter(text).content||text}
                 </ReactMarkdowm>
@@ -113,6 +140,19 @@ export default function Home() {
                       `
                     }}
                 />
+                {/* <Script id="load hight min" src="highlightjs/build/highlight.min.js" />
+                <Script id="load languages render" src="highlightjs/build/languages/a11yDark.min.js" />
+                <Script id="load language elm" src="highlightjs/build/languages/elm.min.js" />
+                <Script
+                  id = "onload highlight"
+                  type="js"
+                  strategy='afterInteractive'
+                  dangerouslySetInnerHTML={{
+                    __html: `
+                    hljs.initHighlightingOnLoad();
+                    `
+                  }}
+                /> */}
               </div>
             </Viewer>
           </div>

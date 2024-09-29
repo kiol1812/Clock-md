@@ -1,7 +1,7 @@
 .clock_container {
   display: flex;
   align-items: stretch; /* Ensure both clock and calendar stretch vertically */
-  color: white;
+  /* color: white; */
   text-align: center;
 }
 
@@ -11,6 +11,7 @@
   letter-spacing: 3px;
   display: flex;
   align-items: center; /* Vertically center the clock */
+  color: aliceblue;
 }
 
 .calendar_container {
@@ -85,7 +86,7 @@
   border-radius: 10px;
   background-color: #00000000;
   border: #00000000 solid;
-  color: aliceblue;
+  /* color: aliceblue; */
 }
 .workspace h4{
   color: #aaaaaa77;
@@ -95,7 +96,21 @@
   color: aliceblue;
 }
 .doc ul{
-  padding-left: 30px;
+  padding-left: 2em;
+}
+.doc ol{
+  padding-left: 2em;
+}
+.doc blockquote{
+  padding-left: 1em;
+  margin-left: 1em;
+  padding-top: 0.2em;
+  padding-bottom: 0.2em;
+  border-left: 4px #cccccc77 solid;
+  background-color: #77777722;
+}
+.doc blockquote > p {
+  text-indent:0
 }
 
 /* Responsive styling */
