@@ -13,11 +13,11 @@ import "./globals.css";
 //   weight: "100 900",
 // });
 
-import { Roboto, Inter } from 'next/font/google' 
-const roboto = Roboto({
-  weight: ['400', '500', '700'],
-  subsets: ['latin'],
-})
+import { Inter } from 'next/font/google' 
+// const roboto = Roboto({
+//   weight: ['400', '500', '700'],
+//   subsets: ['latin'],
+// })
 const inter = Inter({
   weight:['400', '500', '700'],
   subsets: ["latin"],
