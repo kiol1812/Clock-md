@@ -56,6 +56,7 @@ export default function Home() {
   const [hour, setHour] = useState<string>("");
   const [calender, setCalender] = useState<React.ReactNode[]|null>(null);
   const [text, setText] = useState<string>("");
+  const [fontSize, setFontSize] = useState<number>(16);
   useEffect(()=>{
     const monthNames = ["January","February","March","April","May","June","July","August","September","October","November","December"];
     timerRef.current = setInterval(()=>{
@@ -81,6 +82,8 @@ export default function Home() {
     hljs.highlightAll();
   }, [text]);
   useHotkeys([['/', ()=>setWorksapce(!worksapce)]]);
+  useHotkeys([['n', ()=>setFontSize(fontSize-1)]]);
+  useHotkeys([['m', ()=>setFontSize(fontSize+1)]]);
   return (
     <div>
       <main>
@@ -100,7 +103,7 @@ export default function Home() {
           <div onClick={()=>{setEditing(!isediting)}}>
             <Viewer w={isediting?384:768} >
               <h4>{(!isFullScreen)?(isediting)?"Click to close editor.":"Click to editing.":""}</h4>
-              <div>
+              <div style={{fontSize: fontSize}}>
                 <ReactMarkdowm
                   className={styles.doc}
                   remarkPlugins={[remarkGfm, remarkMath]} 

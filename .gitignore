@@ -4,6 +4,7 @@
 .swc/
 .*.env
 .vscode
+todo
 
 # dependencies
 /node_modules
